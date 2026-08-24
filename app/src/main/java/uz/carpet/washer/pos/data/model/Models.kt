@@ -32,6 +32,7 @@ data class Order(
     val totalAmount: Long = 0,       // Jami summa (so'm)
     val advanceAmount: Long = 0,     // Avans (so'm)
     val remainingAmount: Long = 0,   // Qoldiq (so'm)
+    val isFullyPaid: Boolean = false,// Qoldiq to'liq uzildimi?
     val status: OrderStatus = OrderStatus.RECEIVED,
     val deletedAt: Long? = null      // Soft delete - arxivlash uchun
 )

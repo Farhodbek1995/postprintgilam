@@ -37,6 +37,7 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
             query.isNotBlank() -> repo.searchOrders(query)
             filter == DashboardFilter.PENDING_DELIVERY -> repo.getPendingDeliveryOrders()
             filter == DashboardFilter.FULLY_PAID -> repo.getFullyPaidOrders()
+            filter == DashboardFilter.ARCHIVED -> repo.getArchivedOrders()
             else -> repo.getAllOrders()
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
@@ -61,6 +62,10 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun archiveOrder(orderId: Long) {
         viewModelScope.launch { repo.archiveOrder(orderId) }
+    }
+
+    fun restoreOrder(orderId: Long) {
+        viewModelScope.launch { repo.restoreOrder(orderId) }
     }
 
     /**
@@ -88,5 +93,6 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
 enum class DashboardFilter(val label: String) {
     ALL("Barchasi"),
     PENDING_DELIVERY("Kechiktirilgan"),
-    FULLY_PAID("To'liq to'langan")
+    FULLY_PAID("To'liq to'langan"),
+    ARCHIVED("Arxivlangan")
 }

@@ -49,10 +49,18 @@ interface OrderDao {
     // Qoldiq 0 bo'lganlar (to'liq to'langan)
     @Query("""
         SELECT * FROM orders 
-        WHERE deletedAt IS NULL AND remainingAmount = 0
+        WHERE deletedAt IS NULL AND (remainingAmount = 0 OR isFullyPaid = 1)
         ORDER BY orderDate DESC
     """)
     fun getFullyPaidOrders(): Flow<List<Order>>
+
+    // Arxivlangan buyurtmalar
+    @Query("""
+        SELECT * FROM orders 
+        WHERE deletedAt IS NOT NULL
+        ORDER BY orderDate DESC
+    """)
+    fun getArchivedOrders(): Flow<List<Order>>
 
     // Bitta buyurtmani olish
     @Query("SELECT * FROM orders WHERE id = :id")

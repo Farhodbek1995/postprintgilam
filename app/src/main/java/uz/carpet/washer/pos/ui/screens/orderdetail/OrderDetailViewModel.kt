@@ -58,11 +58,8 @@ class OrderDetailViewModel(
     fun payRemaining() {
         viewModelScope.launch {
             _orderData.value?.let { data ->
-                if (data.order.remainingAmount > 0) {
-                    val updated = data.order.copy(
-                        advanceAmount = data.order.totalAmount,
-                        remainingAmount = 0L
-                    )
+                if (data.order.remainingAmount > 0 && !data.order.isFullyPaid) {
+                    val updated = data.order.copy(isFullyPaid = true)
                     repo.updateOrder(updated, data.carpets)
                     loadOrder()
                 }

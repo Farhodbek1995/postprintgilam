@@ -118,22 +118,37 @@ fun OrderDetailScreen(
                     Spacer(Modifier.height(6.dp))
                     SummaryRow("Avans:", "${formatMoney(data.order.advanceAmount)} so'm")
                     Spacer(Modifier.height(8.dp))
-                    Card(
-                        shape = RoundedCornerShape(10.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = if (data.order.remainingAmount > 0) Color(0xFFFFFBEB) else Color(0xFFECFDF5)
-                        )
-                    ) {
-                        SummaryRow(
-                            "Qoldiq:",
-                            "${formatMoney(data.order.remainingAmount)} so'm",
-                            isHighlight = true,
-                            highlightColor = if (data.order.remainingAmount > 0) Warning else Secondary,
-                            modifier = Modifier.padding(12.dp)
-                        )
+                    if (data.order.isFullyPaid) {
+                        Card(
+                            shape = RoundedCornerShape(10.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color(0xFFECFDF5))
+                        ) {
+                            SummaryRow(
+                                "Qoldiq:",
+                                "0 so'm (To'liq to'landi)",
+                                isHighlight = true,
+                                highlightColor = Secondary,
+                                modifier = Modifier.padding(12.dp)
+                            )
+                        }
+                    } else {
+                        Card(
+                            shape = RoundedCornerShape(10.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = if (data.order.remainingAmount > 0) Color(0xFFFFFBEB) else Color(0xFFECFDF5)
+                            )
+                        ) {
+                            SummaryRow(
+                                "Qoldiq:",
+                                "${formatMoney(data.order.remainingAmount)} so'm",
+                                isHighlight = true,
+                                highlightColor = if (data.order.remainingAmount > 0) Warning else Secondary,
+                                modifier = Modifier.padding(12.dp)
+                            )
+                        }
                     }
 
-                    if (data.order.remainingAmount > 0) {
+                    if (data.order.remainingAmount > 0 && !data.order.isFullyPaid) {
                         Spacer(Modifier.height(12.dp))
                         OutlinedButton(
                             onClick = { vm.payRemaining() },

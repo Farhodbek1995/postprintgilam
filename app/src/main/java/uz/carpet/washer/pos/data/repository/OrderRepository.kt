@@ -21,15 +21,15 @@ class OrderRepository(private val context: Context) {
     private val gson = Gson()
 
     // Barcha buyurtmalar (Flow - real vaqtda yangilanib turadi)
-    fun getAllOrders(): Flow<List<Order>> = orderDao.getAllOrders()
-
-    fun searchOrders(query: String): Flow<List<Order>> = orderDao.searchOrders(query)
+    fun getAllOrders(): Flow<List<Order>> = db.orderDao().getAllOrders()
+    fun searchOrders(query: String): Flow<List<Order>> = db.orderDao().searchOrders(query)
+    fun getPendingDeliveryOrders(): Flow<List<Order>> = db.orderDao().getPendingDeliveryOrders()
+    fun getFullyPaidOrders(): Flow<List<Order>> = db.orderDao().getFullyPaidOrders()
+    fun getArchivedOrders(): Flow<List<Order>> = db.orderDao().getArchivedOrders()
 
     fun getOrdersByDateRange(start: Long, end: Long): Flow<List<Order>> =
         orderDao.getOrdersByDateRange(start, end)
 
-    fun getPendingDeliveryOrders(): Flow<List<Order>> = orderDao.getPendingDeliveryOrders()
-    fun getFullyPaidOrders(): Flow<List<Order>> = orderDao.getFullyPaidOrders()
     fun getTodayIncome(todayStart: Long): Flow<Long> = orderDao.getTodayIncome(todayStart)
     fun getTodayOrderCount(todayStart: Long): Flow<Int> = orderDao.getTodayOrderCount(todayStart)
     fun getWeeklyStats(weekStart: Long): Flow<List<DailyStats>> = orderDao.getWeeklyStats(weekStart)

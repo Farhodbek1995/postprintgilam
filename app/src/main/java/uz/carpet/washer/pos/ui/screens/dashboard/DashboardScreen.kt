@@ -162,7 +162,8 @@ fun DashboardScreen(
                         onClick = { onOrderClick(order.id) },
                         onEdit = { onEditOrder(order.id) },
                         onReprint = { vm.reprint(order.id) },
-                        onArchive = { vm.archiveOrder(order.id) }
+                        onArchive = { vm.archiveOrder(order.id) },
+                        onRestore = { vm.restoreOrder(order.id) }
                     )
                 }
             }
@@ -242,7 +243,8 @@ fun OrderCard(
     onClick: () -> Unit,
     onEdit: () -> Unit,
     onReprint: () -> Unit,
-    onArchive: () -> Unit
+    onArchive: () -> Unit,
+    onRestore: () -> Unit
 ) {
     var showMenu by remember { mutableStateOf(false) }
     val dateFormat = remember { SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()) }
@@ -303,7 +305,7 @@ fun OrderCard(
                     fontWeight = FontWeight.ExtraBold,
                     color = Primary
                 )
-                if (order.remainingAmount > 0) {
+                if (order.remainingAmount > 0 && !order.isFullyPaid) {
                     Text(
                         "Qoldiq: ${formatMoney(order.remainingAmount)}",
                         fontSize = 11.sp,
@@ -338,13 +340,21 @@ fun OrderCard(
                             DropdownMenuItem(
                                 text = { Text("Tahrirlash") },
                                 leadingIcon = { Icon(Icons.Rounded.Edit, null) },
-                                onClick = { showMenu = false; onEdit() }  // ← To'g'ri: edit ekraniga
+                                onClick = { showMenu = false; onEdit() }
                             )
-                            DropdownMenuItem(
-                                text = { Text("Arxivlash", color = Danger) },
-                                leadingIcon = { Icon(Icons.Rounded.Archive, null, tint = Danger) },
-                                onClick = { showMenu = false; onArchive() }
-                            )
+                            if (order.deletedAt != null) {
+                                DropdownMenuItem(
+                                    text = { Text("Tiklash", color = Secondary) },
+                                    leadingIcon = { Icon(Icons.Rounded.Restore, null, tint = Secondary) },
+                                    onClick = { showMenu = false; onRestore() }
+                                )
+                            } else {
+                                DropdownMenuItem(
+                                    text = { Text("Arxivlash", color = Danger) },
+                                    leadingIcon = { Icon(Icons.Rounded.Archive, null, tint = Danger) },
+                                    onClick = { showMenu = false; onArchive() }
+                                )
+                            }
                         }
                     }
                 }

@@ -28,29 +28,21 @@ class Converters {
 //
 // Namuna — kelajakda qo'shiladi:
 //
-// val MIGRATION_1_2 = object : Migration(1, 2) {
-//     override fun migrate(db: SupportSQLiteDatabase) {
-//         // Masalan: yangi ustun qo'shish
-//         db.execSQL("ALTER TABLE orders ADD COLUMN notes TEXT NOT NULL DEFAULT ''")
-//     }
-// }
-//
-// val MIGRATION_2_3 = object : Migration(2, 3) {
-//     override fun migrate(db: SupportSQLiteDatabase) {
-//         db.execSQL("CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status)")
-//     }
-// }
+val MIGRATION_1_2 = object : Migration(1, 2) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE orders ADD COLUMN isFullyPaid INTEGER NOT NULL DEFAULT 0")
+    }
+}
 
-// Barcha migratsiyalar ro'yxati (yangi qo'shilganda shu arrayga qo'shiladi)
+// Barcha migratsiyalar ro'yxati
 val ALL_MIGRATIONS: Array<Migration> = arrayOf(
-    // MIGRATION_1_2,
-    // MIGRATION_2_3,
+    MIGRATION_1_2
 )
 
 // ===== Room Database =====
 @Database(
     entities = [Order::class, Carpet::class],
-    version = 1,
+    version = 2,
     exportSchema = true   // true — sxema JSON ga eksport qilinadi (migratsiya tarixini saqlaydi)
 )
 @TypeConverters(Converters::class)
