@@ -55,6 +55,21 @@ class OrderDetailViewModel(
         }
     }
 
+    fun payRemaining() {
+        viewModelScope.launch {
+            _orderData.value?.let { data ->
+                if (data.order.remainingAmount > 0) {
+                    val updated = data.order.copy(
+                        advanceAmount = data.order.totalAmount,
+                        remainingAmount = 0L
+                    )
+                    repo.updateOrder(updated, data.carpets)
+                    loadOrder()
+                }
+            }
+        }
+    }
+
     fun printReceipt() {
         viewModelScope.launch {
             val data = _orderData.value

@@ -132,6 +132,20 @@ fun OrderDetailScreen(
                             modifier = Modifier.padding(12.dp)
                         )
                     }
+
+                    if (data.order.remainingAmount > 0) {
+                        Spacer(Modifier.height(12.dp))
+                        OutlinedButton(
+                            onClick = { vm.payRemaining() },
+                            modifier = Modifier.fillMaxWidth().height(48.dp),
+                            shape = RoundedCornerShape(12.dp),
+                            border = ButtonDefaults.outlinedButtonBorder.copy(brush = androidx.compose.ui.graphics.SolidColor(Primary))
+                        ) {
+                            Icon(Icons.Rounded.AttachMoney, null, tint = Primary, modifier = Modifier.size(18.dp))
+                            Spacer(Modifier.width(8.dp))
+                            Text("Qoldiqni to'liq to'lash", color = Primary, fontWeight = FontWeight.SemiBold)
+                        }
+                    }
                 }
 
                 // Chek chiqarish tugmasi
