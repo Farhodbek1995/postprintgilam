@@ -149,14 +149,14 @@ class UsbPrinterManager(private val context: Context) {
         try {
             val connection = usbManager.openDevice(device) ?: run {
                 _state.value = PrinterState.Error("Qurilmani ochib bo'lmadi")
-                return false
+                return@withContext false
             }
 
             val usbInterface = device.getInterface(0)
             if (!connection.claimInterface(usbInterface, true)) {
                 connection.close()
                 _state.value = PrinterState.Error("Interface ruxsati olinmadi")
-                return false
+                return@withContext false
             }
 
             // OUT endpoint topish (printerga ma'lumot yuborish uchun)
