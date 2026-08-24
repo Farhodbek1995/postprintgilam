@@ -229,7 +229,7 @@ fun CarpetInputBlock(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    "${"%.2f".format(carpet.width)} × ${"%.2f".format(carpet.length)} = ${"%.2f".format(carpet.area)} m²",
+                    "${"%.2f".format(carpet.widthDouble)} × ${"%.2f".format(carpet.lengthDouble)} = ${"%.2f".format(carpet.area)} m²",
                     fontSize = 13.sp, color = Primary
                 )
                 Text(
