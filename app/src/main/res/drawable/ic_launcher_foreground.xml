@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Gilam yuvish POS uchun launcher ikonkasi (old qism - foreground).
+    108x108dp adaptive icon standartida ishlaydi.
+    Ichidagi rasm: gilam ramzini ifodalovchi oddiy vektor chizma.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Markaziy aylana fon (oq) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,20 C35.2,20 20,35.2 20,54 C20,72.8 35.2,88 54,88 C72.8,88 88,72.8 88,54 C88,35.2 72.8,20 54,20Z" />
+
+    <!-- Printer korpus -->
+    <path
+        android:fillColor="#2563EB"
+        android:pathData="M36,46 L72,46 L72,66 L36,66 Z" />
+
+    <!-- Printer tepa qismi (qog'oz qabul qiluvchi) -->
+    <path
+        android:fillColor="#1D4ED8"
+        android:pathData="M40,38 L68,38 L68,46 L40,46 Z" />
+
+    <!-- Printer chiqib kelayotgan qog'oz -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M44,46 L64,46 L64,62 L44,62 Z" />
+
+    <!-- Qog'oz ustidagi chiziqlar (matn belgisi) -->
+    <path
+        android:fillColor="#94A3B8"
+        android:strokeColor="#94A3B8"
+        android:strokeWidth="1.5"
+        android:pathData="M47,51 L61,51" />
+    <path
+        android:fillColor="#94A3B8"
+        android:strokeColor="#94A3B8"
+        android:strokeWidth="1.5"
+        android:pathData="M47,55 L61,55" />
+    <path
+        android:fillColor="#94A3B8"
+        android:strokeColor="#94A3B8"
+        android:strokeWidth="1.5"
+        android:pathData="M47,59 L55,59" />
+
+    <!-- Printer ustidagi yashil chiroq (ulangan indikator) -->
+    <path
+        android:fillColor="#10B981"
+        android:pathData="M64,41 C64,42.1 63.1,43 62,43 C60.9,43 60,42.1 60,41 C60,39.9 60.9,39 62,39 C63.1,39 64,39.9 64,41Z" />
+
+</vector>
