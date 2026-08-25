@@ -37,6 +37,7 @@ fun OrderDetailScreen(
     val orderData by vm.orderData.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     var showStatusDialog by remember { mutableStateOf(false) }
+    var showReceiptDialog by remember { mutableStateOf(false) }
     val dateFormat = remember { SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()) }
     val printMessage by vm.printMessage.collectAsState()
 
@@ -179,8 +180,6 @@ fun OrderDetailScreen(
             }
 
             // Status o'zgartirish dialogi
-            var showReceiptDialog by remember { mutableStateOf(false) }
-
             if (showReceiptDialog) {
                 AlertDialog(
                     onDismissRequest = { showReceiptDialog = false },
@@ -190,7 +189,7 @@ fun OrderDetailScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .verticalScroll(rememberScrollState())
-                                .background(Color(0xFFFAFAFA))
+                                .androidx.compose.foundation.background(Color(0xFFFAFAFA))
                                 .padding(16.dp)
                         ) {
                             Text(
