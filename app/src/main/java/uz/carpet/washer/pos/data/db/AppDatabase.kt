@@ -34,16 +34,23 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
     }
 }
 
+val MIGRATION_2_3 = object : Migration(2, 3) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE carpets ADD COLUMN type TEXT NOT NULL DEFAULT 'Gilam'")
+    }
+}
+
 // Barcha migratsiyalar ro'yxati
 val ALL_MIGRATIONS: Array<Migration> = arrayOf(
-    MIGRATION_1_2
+    MIGRATION_1_2,
+    MIGRATION_2_3
 )
 
 // ===== Room Database =====
 @Database(
     entities = [Order::class, Carpet::class],
-    version = 2,
-    exportSchema = true   // true — sxema JSON ga eksport qilinadi (migratsiya tarixini saqlaydi)
+    version = 3,
+    exportSchema = true
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {

@@ -47,7 +47,7 @@ object EscPosHelper {
         append(ALIGN_CENTER)
         append(BOLD_ON)
         append(FONT_LARGE)
-        appendText("GILAM YUVISH"); newLine()
+        appendText("BEG'UBOR GILAM YUVISH"); newLine()
         append(FONT_NORMAL)
         appendText("BUYURTMA №%06d".format(order.id)); newLine()
         append(BOLD_OFF)
@@ -80,16 +80,20 @@ object EscPosHelper {
         for ((index, carpet) in carpets.withIndex()) {
             if (carpets.size > 1) {
                 append(BOLD_ON)
-                appendText("Gilam ${index + 1}:"); append(BOLD_OFF)
+                appendText("${carpet.type} ${index + 1}:"); append(BOLD_OFF)
                 newLine()
             } else {
                 append(BOLD_ON)
-                appendText("Gilam:"); append(BOLD_OFF)
+                appendText("${carpet.type}:"); append(BOLD_OFF)
                 newLine()
             }
-            appendText("${"%.2f".format(carpet.width)} x ${"%.2f".format(carpet.length)} = ${"%.2f".format(carpet.area)} m2")
+            if (carpet.type == "Gilam" || carpet.length > 0) {
+                appendText("${"%.2f".format(carpet.width)} x ${"%.2f".format(carpet.length)} = ${"%.2f".format(carpet.area)} m2")
+            } else {
+                appendText("${"%.2f".format(carpet.width)} dona/m")
+            }
             newLine()
-            appendText("Narx: ${formatMoney(carpet.pricePerSqm)} so'm/m2"); newLine()
+            appendText("Narx: ${formatMoney(carpet.pricePerSqm)} so'm"); newLine()
             appendText(formatRow("Summa:", "${formatMoney(carpet.totalPrice)} so'm")); newLine()
             newLine()
         }
@@ -103,10 +107,19 @@ object EscPosHelper {
         append(BOLD_OFF)
         separator()
 
-        // Pastki qism
+        // Pastki qism va QR kod
         newLine()
         append(ALIGN_CENTER)
-        appendText("Rahmat!"); newLine()
+        appendText("Bizni tanlaganingiz uchun rahmat!"); newLine()
+        newLine()
+        
+        // Telegram ssilka matni
+        appendText("Telegram guruhimiz:"); newLine()
+        appendText("https://t.me/begubor_gilam"); newLine()
+        newLine()
+        
+        // QR Kod
+        append(buildQrCode("https://t.me/begubor_gilam"))
         newLine()
         newLine()
         newLine()
@@ -151,5 +164,61 @@ object EscPosHelper {
     private fun formatRow(left: String, right: String): String {
         val spaces = LINE_WIDTH - left.length - right.length
         return if (spaces > 0) "$left${" ".repeat(spaces)}$right" else "$left $right"
+    }
+
+    // ===== QR KOD YASASH =====
+    private fun buildQrCode(url: String): ByteArray {
+        val buffer = mutableListOf<Byte>()
+        val storeLen = url.length + 3
+        val pL = (storeLen % 256).toByte()
+        val pH = (storeLen / 256).toByte()
+        
+        // Model 2
+        buffer.addAll(byteArrayOf(0x1D, 0x28, 0x6B, 0x04, 0x00, 0x31, 0x41, 0x32, 0x00).toList())
+        // Size 6
+        buffer.addAll(byteArrayOf(0x1D, 0x28, 0x6B, 0x03, 0x00, 0x31, 0x43, 0x06).toList())
+        // Error correction M
+        buffer.addAll(byteArrayOf(0x1D, 0x28, 0x6B, 0x03, 0x00, 0x31, 0x45, 0x31).toList())
+        // Store data
+        buffer.addAll(byteArrayOf(0x1D, 0x28, 0x6B, pL, pH, 0x31, 0x50, 0x30).toList())
+        buffer.addAll(url.toByteArray(Charsets.UTF_8).toList())
+        // Print QR
+        buffer.addAll(byteArrayOf(0x1D, 0x28, 0x6B, 0x03, 0x00, 0x31, 0x51, 0x30).toList())
+        
+        return buffer.toByteArray()
+    }
+
+    // ===== VIRTUAL CHEK (UI uchun Matn) =====
+    fun buildReceiptText(order: Order, carpets: List<Carpet>): String {
+        val sb = java.lang.StringBuilder()
+        sb.append("      BEG'UBOR GILAM YUVISH\n")
+        sb.append("      BUYURTMA №%06d\n".format(order.id))
+        sb.append("-".repeat(32)).append("\n")
+        sb.append("Sana: ${dateFormat.format(Date(order.orderDate))}\n\n")
+        sb.append("Mijoz: ${order.customerName}\n")
+        sb.append("Tel: ${order.customerPhone}\n")
+        if (order.customerAddress.isNotBlank()) {
+            sb.append("Manzil: ${order.customerAddress}\n")
+        }
+        sb.append("\n").append("-".repeat(32)).append("\n")
+        for ((index, carpet) in carpets.withIndex()) {
+            sb.append(if (carpets.size > 1) "${carpet.type} ${index + 1}:\n" else "${carpet.type}:\n")
+            if (carpet.type == "Gilam" || carpet.length > 0) {
+                sb.append("${"%.2f".format(carpet.width)} x ${"%.2f".format(carpet.length)} = ${"%.2f".format(carpet.area)} m2\n")
+            } else {
+                sb.append("${"%.2f".format(carpet.width)} dona/m\n")
+            }
+            sb.append("Narx: ${formatMoney(carpet.pricePerSqm)} so'm\n")
+            sb.append("Summa: ${formatMoney(carpet.totalPrice)} so'm\n\n")
+        }
+        sb.append("-".repeat(32)).append("\n")
+        sb.append("JAMI: ${formatMoney(order.totalAmount)} so'm\n")
+        sb.append("AVANS: ${formatMoney(order.advanceAmount)} so'm\n")
+        sb.append("QOLDIQ: ${formatMoney(order.remainingAmount)} so'm\n")
+        sb.append("-".repeat(32)).append("\n\n")
+        sb.append("  Bizni tanlaganingiz uchun rahmat!\n")
+        sb.append("  Telegram guruhimiz:\n")
+        sb.append("  https://t.me/begubor_gilam\n")
+        return sb.toString()
     }
 }

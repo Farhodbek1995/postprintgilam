@@ -54,7 +54,8 @@ data class Carpet(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val orderId: Long,
-    val width: Double,          // Eni (m)
+    val type: String = "Gilam", // Gilam, Adyal, Parda va hokazo
+    val width: Double,          // Eni (m) yoki dona
     val length: Double,         // Bo'yi (m)
     val area: Double,           // m² = eni × bo'yi
     val pricePerSqm: Long,      // 1 m² narxi (so'm)

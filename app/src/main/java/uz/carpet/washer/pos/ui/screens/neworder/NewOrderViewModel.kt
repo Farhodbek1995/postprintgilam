@@ -19,6 +19,7 @@ private val carpetIdGenerator = AtomicInteger(0)
 // Gilam kiritish uchun UI steti
 data class CarpetInput(
     val id: Int = carpetIdGenerator.incrementAndGet(),
+    val type: String = "Gilam",
     val width: String = "",
     val length: String = "",
     val pricePerSqm: String = "15000"
@@ -26,7 +27,7 @@ data class CarpetInput(
     val widthDouble get() = width.toDoubleOrNull() ?: 0.0
     val lengthDouble get() = length.toDoubleOrNull() ?: 0.0
     val priceDouble get() = pricePerSqm.toLongOrNull() ?: 0L
-    val area get() = widthDouble * lengthDouble
+    val area get() = if (type == "Gilam" || lengthDouble > 0) widthDouble * lengthDouble else widthDouble
     val total get() = (area * priceDouble).toLong()
 }
 
@@ -83,13 +84,12 @@ class NewOrderViewModel(
             try {
                 val data = repo.getOrderWithCarpets(orderId)
                 if (data != null) {
-                    val carpetInputs = data.carpets.map { carpet ->
+                    val carpetInputs = data.carpets.map {
                         CarpetInput(
-                            // id = carpet.id.toInt() OLIB TASHLANDI. 
-                            // Endi doim AtomicInteger orqali xavfsiz UI kalit olinadi
-                            width = carpet.width.toString(),
-                            length = carpet.length.toString(),
-                            pricePerSqm = carpet.pricePerSqm.toString()
+                            type = it.type,
+                            width = it.width.toString(),
+                            length = it.length.toString(),
+                            pricePerSqm = it.pricePerSqm.toString()
                         )
                     }.ifEmpty { listOf(CarpetInput()) }
 
@@ -152,7 +152,8 @@ class NewOrderViewModel(
             try {
                 val carpets = state.carpets.map {
                     Carpet(
-                        orderId = 0,
+                        orderId = 0, // Repository saqlashda o'zi ID beradi
+                        type = it.type,
                         width = it.widthDouble,
                         length = it.lengthDouble,
                         area = it.area,

@@ -183,16 +183,35 @@ fun CarpetInputBlock(
     onUpdate: (CarpetInput) -> Unit,
     onRemove: () -> Unit
 ) {
+    val types = listOf("Gilam", "Adyal", "Parda", "Yostiq", "Boshqa")
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text("Gilam $index", fontWeight = FontWeight.SemiBold, fontSize = 14.sp, color = Primary)
+        Text("Buyum $index", fontWeight = FontWeight.SemiBold, fontSize = 14.sp, color = Primary)
         if (showRemove) {
             IconButton(onClick = onRemove, modifier = Modifier.size(32.dp)) {
                 Icon(Icons.Rounded.DeleteOutline, null, tint = Danger, modifier = Modifier.size(20.dp))
             }
+        }
+    }
+    // Type tanlash chiplari
+    androidx.compose.foundation.lazy.LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        androidx.compose.foundation.lazy.items(types) { type ->
+            FilterChip(
+                selected = carpet.type == type,
+                onClick = { onUpdate(carpet.copy(type = type)) },
+                label = { Text(type, fontSize = 12.sp) },
+                colors = FilterChipDefaults.filterChipColors(
+                    selectedContainerColor = PrimaryLight,
+                    selectedLabelColor = Primary
+                )
+            )
         }
     }
     Spacer(Modifier.height(8.dp))
@@ -202,14 +221,14 @@ fun CarpetInputBlock(
             modifier = Modifier.weight(1f),
             value = carpet.width,
             onValueChange = { onUpdate(carpet.copy(width = it)) },
-            label = "Eni (m)",
+            label = if (carpet.type == "Gilam") "Eni (m)" else "Soni / Eni",
             keyboardType = KeyboardType.Decimal
         )
         PosTextField(
             modifier = Modifier.weight(1f),
             value = carpet.length,
             onValueChange = { onUpdate(carpet.copy(length = it)) },
-            label = "Bo'yi (m)",
+            label = if (carpet.type == "Gilam") "Bo'yi (m)" else "Uzunligi (ixtiyoriy)",
             keyboardType = KeyboardType.Decimal
         )
     }
@@ -217,7 +236,7 @@ fun CarpetInputBlock(
     PosTextField(
         value = carpet.pricePerSqm,
         onValueChange = { onUpdate(carpet.copy(pricePerSqm = it)) },
-        label = "1 m² narxi (so'm)",
+        label = if (carpet.type == "Gilam") "1 m² narxi (so'm)" else "1 dona/m² narxi (so'm)",
         icon = Icons.Rounded.AttachMoney,
         keyboardType = KeyboardType.Number
     )
@@ -228,8 +247,13 @@ fun CarpetInputBlock(
                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp).fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
+                val calcText = if (carpet.type == "Gilam" || carpet.lengthDouble > 0) {
+                    "${"%.2f".format(carpet.widthDouble)} × ${"%.2f".format(carpet.lengthDouble)} = ${"%.2f".format(carpet.area)}"
+                } else {
+                    "${"%.2f".format(carpet.widthDouble)} dona/m"
+                }
                 Text(
-                    "${"%.2f".format(carpet.widthDouble)} × ${"%.2f".format(carpet.lengthDouble)} = ${"%.2f".format(carpet.area)} m²",
+                    calcText,
                     fontSize = 13.sp, color = Primary
                 )
                 Text(

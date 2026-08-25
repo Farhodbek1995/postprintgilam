@@ -165,20 +165,64 @@ fun OrderDetailScreen(
 
                 // Chek chiqarish tugmasi
                 Button(
-                    onClick = { vm.printReceipt() },
+                    onClick = { showReceiptDialog = true },
                     modifier = Modifier.fillMaxWidth().height(56.dp),
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Primary)
                 ) {
                     Icon(Icons.Rounded.Print, null, modifier = Modifier.size(22.dp))
                     Spacer(Modifier.width(10.dp))
-                    Text("Chek Chiqarish", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                    Text("Chek Ko'rish va Chiqarish", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                 }
 
                 Spacer(Modifier.height(16.dp))
             }
 
             // Status o'zgartirish dialogi
+            var showReceiptDialog by remember { mutableStateOf(false) }
+
+            if (showReceiptDialog) {
+                AlertDialog(
+                    onDismissRequest = { showReceiptDialog = false },
+                    title = { Text("Chek", fontWeight = FontWeight.Bold) },
+                    text = {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .verticalScroll(rememberScrollState())
+                                .background(Color(0xFFFAFAFA))
+                                .padding(16.dp)
+                        ) {
+                            Text(
+                                text = uz.carpet.washer.pos.printer.EscPosHelper.buildReceiptText(data.order, data.carpets),
+                                fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
+                                fontSize = 11.sp,
+                                lineHeight = 16.sp,
+                                color = Color.Black
+                            )
+                        }
+                    },
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                showReceiptDialog = false
+                                vm.printReceipt()
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = Primary)
+                        ) {
+                            Icon(Icons.Rounded.Print, null, modifier = Modifier.size(16.dp))
+                            Spacer(Modifier.width(8.dp))
+                            Text("Printerdan chiqarish")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showReceiptDialog = false }) {
+                            Text("Yopish", color = TextSecondary)
+                        }
+                    },
+                    shape = RoundedCornerShape(16.dp)
+                )
+            }
             if (showStatusDialog) {
                 StatusChangeDialog(
                     currentStatus = data.order.status,
@@ -207,14 +251,16 @@ fun InfoRow(icon: androidx.compose.ui.graphics.vector.ImageVector, label: String
 @Composable
 fun CarpetDetailRow(index: Int, carpet: Carpet) {
     Column {
-        Text("Gilam $index", fontWeight = FontWeight.SemiBold, fontSize = 14.sp, color = Primary)
+        Text("${carpet.type} $index", fontWeight = FontWeight.SemiBold, fontSize = 14.sp, color = Primary)
         Spacer(Modifier.height(4.dp))
+        val dimText = if (carpet.type == "Gilam" || carpet.length > 0) {
+            "${"%.2f".format(carpet.width)} × ${"%.2f".format(carpet.length)} = ${"%.2f".format(carpet.area)} m²"
+        } else {
+            "${"%.2f".format(carpet.width)} dona/m"
+        }
+        Text(dimText, fontSize = 14.sp, color = TextPrimary)
         Text(
-            "${"%.2f".format(carpet.width)} × ${"%.2f".format(carpet.length)} = ${"%.2f".format(carpet.area)} m²",
-            fontSize = 14.sp, color = TextPrimary
-        )
-        Text(
-            "Narx: ${formatMoney(carpet.pricePerSqm)} so'm/m²   →   ${formatMoney(carpet.totalPrice)} so'm",
+            "Narx: ${formatMoney(carpet.pricePerSqm)} so'm   →   ${formatMoney(carpet.totalPrice)} so'm",
             fontSize = 13.sp, color = TextSecondary
         )
     }
