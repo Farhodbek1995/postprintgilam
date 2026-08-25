@@ -175,6 +175,7 @@ fun NewOrderScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CarpetInputBlock(
     index: Int,

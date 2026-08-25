@@ -253,7 +253,7 @@ fun CarpetDetailRow(index: Int, carpet: Carpet) {
     Column {
         Text("${carpet.type} $index", fontWeight = FontWeight.SemiBold, fontSize = 14.sp, color = Primary)
         Spacer(Modifier.height(4.dp))
-        val dimText = if (carpet.type == "Gilam" || carpet.length > 0) {
+        val dimText = if (carpet.type == "Gilam" || carpet.length > 0.0) {
             "${"%.2f".format(carpet.width)} × ${"%.2f".format(carpet.length)} = ${"%.2f".format(carpet.area)} m²"
         } else {
             "${"%.2f".format(carpet.width)} dona/m"

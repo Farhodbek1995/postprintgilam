@@ -87,7 +87,7 @@ object EscPosHelper {
                 appendText("${carpet.type}:"); append(BOLD_OFF)
                 newLine()
             }
-            if (carpet.type == "Gilam" || carpet.length > 0) {
+            if (carpet.type == "Gilam" || carpet.length > 0.0) {
                 appendText("${"%.2f".format(carpet.width)} x ${"%.2f".format(carpet.length)} = ${"%.2f".format(carpet.area)} m2")
             } else {
                 appendText("${"%.2f".format(carpet.width)} dona/m")
@@ -203,7 +203,7 @@ object EscPosHelper {
         sb.append("\n").append("-".repeat(32)).append("\n")
         for ((index, carpet) in carpets.withIndex()) {
             sb.append(if (carpets.size > 1) "${carpet.type} ${index + 1}:\n" else "${carpet.type}:\n")
-            if (carpet.type == "Gilam" || carpet.length > 0) {
+            if (carpet.type == "Gilam" || carpet.length > 0.0) {
                 sb.append("${"%.2f".format(carpet.width)} x ${"%.2f".format(carpet.length)} = ${"%.2f".format(carpet.area)} m2\n")
             } else {
                 sb.append("${"%.2f".format(carpet.width)} dona/m\n")
