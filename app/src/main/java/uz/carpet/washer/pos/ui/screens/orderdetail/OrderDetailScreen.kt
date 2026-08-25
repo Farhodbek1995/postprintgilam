@@ -1,5 +1,6 @@
 package uz.carpet.washer.pos.ui.screens.orderdetail
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -189,7 +190,7 @@ fun OrderDetailScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .verticalScroll(rememberScrollState())
-                                .androidx.compose.foundation.background(Color(0xFFFAFAFA))
+                                .background(Color(0xFFFAFAFA))
                                 .padding(16.dp)
                         ) {
                             Text(
